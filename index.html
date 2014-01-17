@@ -1,0 +1,290 @@
+<!doctype html>
+<!--Created by Tim Knezevich @ tkbrns-->
+<html>
+  
+  <head>
+    <title>Wiki-Mine</title>
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootswatch/3.0.0/flatly/bootstrap.min.css">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+	<script>
+var site;
+var voluntary =  new Array();
+var involuntary = new Array();
+var personal = new Array();
+var habitual = new Array();
+
+function addwiki(){
+  
+  checkwiki();
+  
+  $.ajax({
+    type: "POST",
+    url: wiki-mine.php,
+    data: {s: site, v: voluntary, i: involuntary, p: personal, h: habitual},
+    success: function(data){
+      
+    },
+    error: function(data){
+      
+    }
+  });
+
+}
+  
+function selectoption(type,opt){
+  
+	var re = new RegExp(" ","g");
+	var opt2 = opt.replace(re, "_");
+	var opt3 = "remove"+opt2;
+  
+  switch(type){
+    
+    case 'voluntary':
+      for(var i=0;i<voluntary.length;i++){
+        if(opt == voluntary[i] || opt == 'None'){
+          return;
+        }
+      }
+      voluntary.push(opt);
+      $('#listvoluntary').append("<li style='list-style:none; text-align:left' id='"+opt2+"'><a id='"+opt3+"' opt='"+opt2+"' ty='voluntary' style='border-radius: 10px; background:rgba(0,0,0,0.2); float: left; cursor:pointer; text-decoration: none'>X</a> "+opt+"</li>");
+      $('#barV').css('background','rgba(24,188,156,0.8)');
+	  
+	  console.log(voluntary.length);
+    break;
+    
+    case 'involuntary':
+      for(var i=0;i<involuntary.length;i++){
+        console.log(i);
+        console.log(opt);
+        if(opt == involuntary[i] || opt == 'None'){
+          return;
+        }
+      }
+      involuntary.push(opt);
+      $('#listinvoluntary').append("<li style='list-style:none; text-align:left' id='"+opt2+"'><a id='"+opt3+"' opt='"+opt2+"' ty='involuntary' style='border-radius: 10px; background:rgba(0,0,0,0.2); float: left; cursor:pointer; text-decoration: none'>X</a> "+opt+"</li>");
+      $('#barI').css('background','rgba(24,188,156,0.8)');
+    break;
+    
+    case 'personal':
+      for(var i=0;i<personal.length;i++){
+        if(opt == personal[i] || opt == 'None'){
+          return;
+        }
+      }
+      personal.push(opt);
+      $('#listpersonal').append("<li style='list-style:none; text-align:left' id='"+opt2+"'><a id='"+opt3+"' opt='"+opt2+"' ty='personal' style='border-radius: 10px; background:rgba(0,0,0,0.2); float: left; cursor:pointer; text-decoration: none'>X</a> "+opt+"</li>");
+      $('#barP').css('background','rgba(24,188,156,0.8)');
+    break;
+    
+    case 'habitual':
+      for(var i=0;i<habitual.length;i++){
+        if(opt == habitual[i] || opt == 'None'){
+          return;
+        }
+      }
+      habitual.push(opt);
+      $('#listhabitual').after("<li style='list-style:none; text-align:left' id='"+opt2+"'><a id='"+opt3+"' opt='"+opt2+"' ty='habitual' style='border-radius: 10px; background:rgba(0,0,0,0.2); float: left; cursor:pointer; text-decoration: none'>X</a> "+opt+"</li>");
+      $('#barH').css('background','rgba(24,188,156,0.8)');
+    break;
+    
+  };
+  
+	$("#"+opt3).click(function() {
+		option = $(this).attr('opt');
+		ty = $(this).attr('ty');
+		removeoption(ty,option);
+		return true;
+	});
+  
+}
+
+function removeoption(type,opt){
+
+  switch(type){
+    
+    case 'voluntary':
+      var index = voluntary.indexOf(opt);
+      voluntary.splice(index, 1);
+      $('#'+opt).remove();
+      
+      if (voluntary.length == 0){
+        console.log('0');
+        $('#barV').css('background','rgba(0,0,0,0.2)');
+      }
+      
+	  console.log(voluntary.length);
+    break;
+    
+    case 'involuntary':
+      var index = involuntary.indexOf(opt);
+      involuntary.splice(index, 1);
+      $('#'+opt).remove();
+      
+      if (involuntary.length == 0){
+        $('#barI').css('background','rgba(0,0,0,0.2)');
+      }
+      
+    break;
+    
+    case 'personal':
+      var index = personal.indexOf(opt);
+      personal.splice(index, 1);
+      $('#'+opt).remove();
+      
+      if (personal.length == 0){
+        $('#barP').css('background','rgba(0,0,0,0.2)');
+      }
+      
+    break;
+    
+    case 'habitual':
+      var index = habitual.indexOf(opt);
+      habitual.splice(index, 1);
+      $('#'+opt).remove();
+      
+      if (habitual.length == 0){
+        $('#barH').css('background','rgba(0,0,0,0.2)');
+      }
+      
+    break;
+    
+  }
+  
+}
+
+function checkwiki(){
+
+}
+
+function downloadwiki(){
+  
+}
+
+function chkd(){
+  
+  if($("#chk1").is(':checked') || $("#chk2").is(':checked')) {
+    $('#sealcontainer').css('background','#f00');
+  }  else{
+    $('#sealcontainer').css('background','none');
+  }
+
+  
+}
+	</script>
+  </head>
+  
+  <body style="text-align: center">
+    <div class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
+          </button>
+          <a href="#" class="navbar-brand">Wiki-Mine</a>
+        </div>
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="active">
+              <a href="#">Home</a>
+            </li>
+            <li>
+              <a href="#">About</a>
+            </li>
+            <li>
+              <a href="#">Blog</a>
+            </li>
+            <li>
+              <a href="#">Contact</a>
+            </li>
+            <li>
+              <a href="#">Download Wiki</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <span class="badge" style="left: 10px; position: absolute">0 websites wiki-ed</span><h1 id="h" style>Wiki-Mine</h1>
+    <div id="sealcontainer" style="height: 80px; width: 80px; margin: auto; border-radius: 10px;">
+      <div id="barV" style="height: 25%; border-radius: 10px; background: rgba(0,0,0,0.2)">V
+      </div>
+      <div id="barI" style="height: 25%; border-radius: 10px; background: rgba(0,0,0,0.2)">I
+      </div>
+      <div id="barP" style="height: 25%; border-radius: 10px; background: rgba(0,0,0,0.2)">P
+      </div>
+      <div id="barH" style="height: 25%; border-radius: 10px; background: rgba(0,0,0,0.2)">H
+      </div>
+    </div><br>
+    <div style="text-align: left">
+      <h1 style='margin: 0px 10px 10px 10px'>site</h1>
+      <input type="text" class="form-control" style='margin: 0px 10px 10px 10px;' placeholder="type the full website URL here">
+    </div><br>
+    <div class="row" style="min-height: 100px; margin: 0px 10px 10px 10px">
+      <div class="col-xs-3">
+        <h1>voluntary</h1>
+        <p style='min-height:100px'>This includes any information a site may ask you for upfront. This is usually an E-mail, password, and credit card information.</p>
+        <select class="form-control" id="selectvoluntary" onchange="selectoption('voluntary',this.value)">
+          <option>None</option>
+          <option>Email</option>
+          <option>Password</option>
+          <option>Address</option>
+          <option>Credit Card</option>
+          <option>Profile Picture</option>
+        </select>
+        <ul id="listvoluntary"></ul>
+      </div>
+      <div class="col-xs-3">
+        <h1>involuntary</h1>
+        <p style='min-height:100px'>This is non-personal information that a site may collect on you including IP, and browser type.</p>
+        <select class="form-control" id="selectinvoluntary" onchange="selectoption('involuntary',this.value)">
+          <option>None</option>
+          <option>IP address</option>
+          <option>Location</option>
+          <option>Browser</option>
+          <option>OS</option>
+          <option>Cookies</option>
+        </select>
+        <ul id="listinvoluntary"></ul>
+      </div>
+      <div class="col-xs-3 col-md-16">
+        <h1>personal</h1>
+        <p style='min-height:100px'>This is any information a site may try to collect on you that could be used to identify you as an individual including age, sex, name, and race.</p>
+        <select class="form-control" id="selectpersonal" onchange="selectoption('personal',this.value)">
+          <option>None</option>
+          <option>Name</option>
+          <option>Age</option>
+          <option>Gender</option>
+          <option>Race</option>
+          <option>Family Members</option>
+          <option>Friends</option>
+        </select>
+        <ul id="listpersonal"></ul>
+      </div>
+      <div class="col-xs-3 col-md-24">
+        <h1>habitual</h1>
+        <p style='min-height:100px'>This includes information that a site collects to determine your habits. Examples include text you type, ads you click, and search history.</p>
+        <select class="form-control" id="selecthabitual" onchange="selectoption('habitual',this.value)">
+          <option>None</option>
+          <option>Search History</option>
+          <option>Interests</option>
+          <option>Time spent online</option>
+          <option>Keystrokes</option>
+          <option>Purchases</option>
+        </select>
+        <ul id="listhabitual"></ul>
+      </div>
+    </div><br>
+    <div class="checkbox" style="text-align:left; background:rgba(0,0,0,0.1); font-size:20px; margin: 0px 10px 10px 10px">
+      <label>
+        <input type="checkbox" value="true" id="chk1" onchange="chkd()">Shares your data with government officials.</label>
+    </div>
+    <div class="checkbox" style="text-align:left; background:rgba(0,0,0,0.1); font-size:20px; margin: 0px 10px 10px 10px">
+      <label>
+        <input type="checkbox" value="true" id="chk2" onchange="chkd()">Installs malicious software on your machine.</label>
+    </div>
+    <a class="btn btn-primary" onclick="addwiki" style='margin-bottom: 50px'>Edit Wiki</a>
+    <footer></footer>
+  </body>
+
+</html>
